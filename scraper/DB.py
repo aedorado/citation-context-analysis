@@ -43,7 +43,13 @@ class DB:
             pass
     
     def link_processed(self, doi):
-        query = 'UPDATE link SET processed = true WHERE doi = ?'
+        query = 'UPDATE link SET processed = 1 WHERE doi = ?'
         self.cursor.execute(query, (doi, ))
-        self.comm.commit()
+        self.conn.commit()
+        
+    def del_all(self):
+        self.cursor.execute('DELETE FROM link;')
+        self.cursor.execute('DELETE FROM citations;')
+        self.cursor.execute('DELETE FROM metadata;')
+        self.conn.commit()
         
