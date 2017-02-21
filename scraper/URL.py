@@ -30,9 +30,22 @@ class URL:
 				time.sleep(1)
 
 	def get_citations(self):
-		self.citaions_url = self.url
-		self.citaions_url.replace('summary', 'citations')
-		print self.citaions_url
+		self.citations_url = self.url.replace('summary', 'citations')
+		OK = False
+		while not OK:
+			try:
+				self.response = urllib2.urlopen(self.citations_url)
+				logging.debug('Successfully connected to : ' + self.url)
+				OK = True
+				return self.response.read()
+			except urllib2.HTTPError as e:
+				tries = tries + 1
+				if tries >= 256:
+					return -1
+				print str(e.code)
+				logging.error('Failure.\nAn HTTP error occured : ' + str(e.code))
+				logging.debug('Refetching : ' + self.url)
+				time.sleep(1)
 
 	def redirect_occured(self):
 		return (self.url != self.finalurl)
