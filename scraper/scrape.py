@@ -23,6 +23,7 @@ while db.count_unpr():
         html = url.fetch()
         # extract abstract
         soup = BeautifulSoup(html, "html.parser")
+        title = soup.find('h2').findAll(text=True)[0]
         abstract_div = soup.find("div", {"id": "abstract"})
         for tag in abstract_div:
             if tag.name == 'p':
@@ -45,6 +46,7 @@ while db.count_unpr():
         # add metadata
         db.insert('metadata', {
             'doi': url.get_doi(),
+            'title': title,
             'abstract': abstract,
             'keyphrases': kws
         })

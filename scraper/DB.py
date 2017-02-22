@@ -8,7 +8,7 @@ class DB:
         
     def create_tables(self):
         self.cursor.execute('CREATE TABLE IF NOT EXISTS link(doi varchar(64)  primary key, url varchar(256), processed boolean)')
-        self.cursor.execute('CREATE TABLE IF NOT EXISTS metadata(doi VARCHAR(64) primary key, abstract text, keyphrases text)')
+        self.cursor.execute('CREATE TABLE IF NOT EXISTS metadata(doi VARCHAR(64) primary key, title text, abstract text, keyphrases text)')
         self.cursor.execute('CREATE TABLE IF NOT EXISTS citations(doi_f VARCHAR(64), doi_t VARCHAR(64), context TEXT, PRIMARY KEY(doi_f, doi_t))')
 
     def insert(self, tablename, data):
@@ -17,8 +17,8 @@ class DB:
             self.cursor.execute(query, (data['doi'], data['url']))
             self.conn.commit()
         elif (tablename == 'metadata'):
-            query = 'INSERT INTO metadata VALUES (?, ?, ?)'
-            self.cursor.execute(query, (data['doi'], data['abstract'], data['keyphrases']))
+            query = 'INSERT INTO metadata VALUES (?, ?, ?, ?)'
+            self.cursor.execute(query, (data['doi'], data['title'], data['abstract'], data['keyphrases']))
             self.conn.commit()
         elif (tablename == 'citations'):
             query = 'INSERT INTO citations VALUES (?, ?, ?)'
