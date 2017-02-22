@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 db = DB()
 
 count = 0
-while db.count_unpr() and count < 15:
+while db.count_unpr():
     # url = URL('http://citeseerx.ist.psu.edu/viewdoc/summary?cid=4320')
     count = count + 1
     url = db.get_unpr()
@@ -40,9 +40,8 @@ while db.count_unpr() and count < 15:
                 for anc in alist:
                     anc.findAll(text=True)
                     kws.append(anc.findAll(text=True)[0])
-                kws = ';'.join(kws)
-                print kws
                 break
+        kws = ';'.join(kws)
         # add metadata
         db.insert('metadata', {
             'doi': url.get_doi(),

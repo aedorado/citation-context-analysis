@@ -15,3 +15,12 @@ The scraper module scrapes citeseerx and stores data in a sqlite database with s
 
 
 #### Usage
+
+The requirements for the module are mentioned in the [requirements.txt](https://github.com/aedorado/citation-context-analysis/blob/master/scraper/requirements.txt) file.
+
+    python setup.py [URL]
+    python scrape.py
+
+The `URL` mentioned here is the seed URL and must be supplied strictly in the following format:
+
+    http://citeseerx.ist.psu.edu/viewdoc/summary?cid=4875 
