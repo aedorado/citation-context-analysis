@@ -4,8 +4,10 @@ from bs4 import BeautifulSoup
 
 db = DB()
 
-if db.count_unpr():
+count = 0
+while db.count_unpr() and count < 15:
     # url = URL('http://citeseerx.ist.psu.edu/viewdoc/summary?cid=4320')
+    count = count + 1
     url = db.get_unpr()
     print url
     url = URL(url)
@@ -24,17 +26,22 @@ if db.count_unpr():
         abstract_div = soup.find("div", {"id": "abstract"})
         for tag in abstract_div:
             if tag.name == 'p':
-                abstract = tag.findAll(text=True)[0]
+                abstract = tag.findAll(text=True)
+                if len(abstract) is not 0:
+                    abstract = abstract[0]
+                else:
+                    abstract = ''
         # extract keywords
         keywords_div = soup.find("div", {"id": "keywords"})
+        kws = []
         for tag in keywords_div:
             if tag.name == 'p':
                 alist = tag.findAll("a")
-                kws = []
                 for anc in alist:
                     anc.findAll(text=True)
                     kws.append(anc.findAll(text=True)[0])
                 kws = ';'.join(kws)
+                print kws
                 break
         # add metadata
         db.insert('metadata', {
@@ -55,17 +62,26 @@ if db.count_unpr():
             urlt = 'http://citeseerx.ist.psu.edu/viewdoc/summary' + href[href.find('?'):]
             urlt = URL(urlt)
             urlt.open()
-            print urlt.get_url()
-            context = tr.find('p', {'class': 'citationContext'}).findAll(text=True)[0]
-            db.insert('citations', {
-                'doi_f': url.get_doi(),
-                'doi_t': urlt.get_doi(),
-                'context': context
-            })
-            db.insert('link', {
-                'doi': urlt.get_doi(),
-                'url': urlt.get_redirect_url()
-            })
+            print ' -> ', urlt.get_url()
+            if (urlt.status_ok()):
+                # print tr.find('p', {'class': 'citationContext'})
+                if tr.find('p', {'class': 'citationContext'}):
+                    context = tr.find('p', {'class': 'citationContext'}).findAll(text=True)[0]
+                else:
+                    context = ''
+                if not db.exists('citations', { 'doi_f': url.get_doi(), 'doi_t': urlt.get_doi()}):
+                    db.insert('citations', {
+                        'doi_f': url.get_doi(),
+                        'doi_t': urlt.get_doi(),
+                        'context': context
+                    })
+                if not db.exists('link', urlt.get_doi()):
+                    db.insert('link', {
+                        'doi': urlt.get_doi(),
+                        'url': urlt.get_url()
+                    })
+            else:
+                print 'ERROR'
     
     db.link_processed(url.get_doi())
 else:

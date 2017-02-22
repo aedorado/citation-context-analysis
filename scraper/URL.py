@@ -24,10 +24,19 @@ class URL:
 				tries = tries + 1
 				if tries >= 256:
 					return -1
-				print str(e.code)
-				logging.error('Failure.\nAn HTTP error occured : ' + str(e.code))
+				if (e.code == 404):
+					OK = True
+				logging.error('Failure.\nAn HTTP error occured : ' + str(e.code) + ' for the url ' + self.url)
 				logging.debug('Refetching : ' + self.url)
 				time.sleep(1)
+	
+	def status_ok(self):
+		try:
+			self.response
+		except AttributeError:
+			return False
+		else:
+			return True
 
 	def get_citations(self):
 		self.citations_url = self.url.replace('summary', 'citations')

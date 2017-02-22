@@ -4,6 +4,7 @@ from URL import URL
 
 db = DB()
 db.create_tables()
+db.del_all()
 
 # http://citeseerx.ist.psu.edu/viewdoc/summary?cid=16057
 if len(sys.argv) == 2:

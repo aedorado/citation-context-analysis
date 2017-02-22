@@ -37,10 +37,10 @@ class DB:
             allrows = self.cursor.fetchall()
             return (len(allrows) == 1)
         elif (tablename == 'citations'):
-            # query = 'INSERT INTO citations VALUES (?, ?, ?)'
-            # self.cursor.execute(query, (data['doi_f'], data['doi_t'], data['context']))
-            # self.conn.commit()
-            pass
+            query = 'SELECT COUNT(*) FROM citations WHERE doi_f = ? AND doi_t = ?'
+            self.cursor.execute(query, (key['doi_f'], key['doi_t']))
+            count = self.cursor.fetchall()[0][0]
+            return (count == 1)
     
     def link_processed(self, doi):
         query = 'UPDATE link SET processed = 1 WHERE doi = ?'
@@ -53,7 +53,7 @@ class DB:
         return self.cursor.fetchall()[0][0]
     
     def get_unpr(self):
-        query = 'SELECT * FROM link where processed = 0'
+        query = 'SELECT * FROM link where processed = 0 LIMIT 0,1'
         self.cursor.execute(query)
         return self.cursor.fetchall()[0][1]
         
