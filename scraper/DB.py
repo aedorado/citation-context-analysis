@@ -7,9 +7,9 @@ class DB:
         self.cursor = self.conn.cursor()
         
     def create_tables(self):
-        self.cursor.execute('CREATE TABLE link(doi varchar(64)  primary key, url varchar(256), processed boolean)')
-        self.cursor.execute('CREATE TABLE metadata(doi VARCHAR(64) primary key, abstract text, keyphrases text)')
-        self.cursor.execute('CREATE TABLE citations(doi_f VARCHAR(64), doi_t VARCHAR(64), context TEXT, PRIMARY KEY(doi_f, doi_t))')
+        self.cursor.execute('CREATE TABLE IF NOT EXISTS link(doi varchar(64)  primary key, url varchar(256), processed boolean)')
+        self.cursor.execute('CREATE TABLE IF NOT EXISTS metadata(doi VARCHAR(64) primary key, abstract text, keyphrases text)')
+        self.cursor.execute('CREATE TABLE IF NOT EXISTS citations(doi_f VARCHAR(64), doi_t VARCHAR(64), context TEXT, PRIMARY KEY(doi_f, doi_t))')
 
     def insert(self, tablename, data):
         if (tablename == 'link'):
@@ -46,6 +46,16 @@ class DB:
         query = 'UPDATE link SET processed = 1 WHERE doi = ?'
         self.cursor.execute(query, (doi, ))
         self.conn.commit()
+        
+    def count_unpr(self):
+        query = 'SELECT COUNT(*) FROM link'
+        self.cursor.execute(query)
+        return self.cursor.fetchall()[0][0]
+    
+    def get_unpr(self):
+        query = 'SELECT * FROM link where processed = 0'
+        self.cursor.execute(query)
+        return self.cursor.fetchall()[0][1]
         
     def del_all(self):
         self.cursor.execute('DELETE FROM link;')

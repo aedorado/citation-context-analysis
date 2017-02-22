@@ -9,16 +9,16 @@ class URL:
 		self.url = url
 
 	def open(self):
-		logging.debug('Opening connection')
+		# logging.debug('Opening connection')
 		OK = False
 		tries = 0
 		while not OK:
 			try:
 				self.response = urllib2.urlopen(self.url)
 				self.finalurl = self.response.geturl()
-				logging.debug('Successfully connected to : ' + self.url)
-				if (self.redirect_occured()):
-					logging.debug('Redirected to : ' + self.finalurl)
+				# logging.debug('Successfully connected to : ' + self.url)
+				# if (self.redirect_occured()):
+					# logging.debug('Redirected to : ' + self.finalurl)
 				OK = True
 			except urllib2.HTTPError as e:
 				tries = tries + 1
@@ -35,7 +35,7 @@ class URL:
 		while not OK:
 			try:
 				self.response = urllib2.urlopen(self.citations_url)
-				logging.debug('Successfully connected to : ' + self.url)
+				# logging.debug('Successfully connected to : ' + self.url)
 				OK = True
 				return self.response.read()
 			except urllib2.HTTPError as e:
