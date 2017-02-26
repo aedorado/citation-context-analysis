@@ -12,6 +12,7 @@ while db.count_unpr():
     print url
     url = URL(url)
     url.open()
+    db.update_link(url.get_doi(), 2)
     
     if (not db.exists('link', url.get_doi()) and url.redirect_occured()):
         db.insert('link', {
@@ -84,6 +85,6 @@ while db.count_unpr():
             else:
                 print 'ERROR'
     
-    db.link_processed(url.get_doi())
+    db.update_link(url.get_doi(), 1)
 else:
     print 'No unprocessed links.'

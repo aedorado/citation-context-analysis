@@ -42,13 +42,13 @@ class DB:
             count = self.cursor.fetchall()[0][0]
             return (count == 1)
     
-    def link_processed(self, doi):
-        query = 'UPDATE link SET processed = 1 WHERE doi = ?'
-        self.cursor.execute(query, (doi, ))
+    def update_link(self, doi, status):
+        query = 'UPDATE link SET processed = ? WHERE doi = ?'
+        self.cursor.execute(query, (status, doi, ))
         self.conn.commit()
         
     def count_unpr(self):
-        query = 'SELECT COUNT(*) FROM link'
+        query = 'SELECT COUNT(*) FROM link WHERE processed = 0'
         self.cursor.execute(query)
         return self.cursor.fetchall()[0][0]
     
@@ -63,3 +63,23 @@ class DB:
         self.cursor.execute('DELETE FROM metadata;')
         self.conn.commit()
         
+    def select_all(self, table):
+        self.cursor.execute('SELECT * FROM ' + table)
+        return self.cursor.fetchall()
+    
+    def get_all(self, table):
+        self.cursor.execute('SELECT * FROM ' + table)
+        return self.cursor.fetchall()
+    
+    def table_to_star_sep(self, table):
+        allrows = self.get_all(table)
+        f = open(table + '.txt', 'w')
+        for row in allrows:
+            for i in range(0, len(row)):
+                if (i == (len(row) - 1)):
+                    f.write(row[i].encode('utf-8'))
+                else:
+                    f.write(row[i].encode('utf-8') + ' *** ')
+            f.write('\n')
+        f.close()
+        print 'File created.'
