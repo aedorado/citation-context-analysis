@@ -2,7 +2,7 @@ from URL import URL
 from DB import DB
 from bs4 import BeautifulSoup
 
-db = DB()
+db = DB('citeseerx.db')
 
 count = 0
 while db.count_unpr():

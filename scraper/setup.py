@@ -2,7 +2,7 @@ import sys
 from DB import DB
 from URL import URL
 
-db = DB()
+db = DB('citeseerx.db')
 db.create_tables()
 # db.del_all()
 

@@ -1,6 +1,6 @@
 from DB import DB
 
-db = DB()
+db = DB('citeseerx.db')
 all_papers = db.select_all('metadata')
 
 kw_dict = {}

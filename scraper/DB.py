@@ -2,8 +2,8 @@ import sqlite3 as db
 
 class DB:
 
-    def __init__(self):
-        self.conn = db.connect('citeseerx.db')
+    def __init__(self, db_name):
+        self.conn = db.connect(db_name)
         self.cursor = self.conn.cursor()
         
     def create_tables(self):
@@ -74,7 +74,7 @@ class DB:
     def table_to_star_sep(self, table):
         allrows = self.get_all(table)
         f = open(table + '.txt', 'w')
-        for row in allrows:
+        for row in allrows[1:3]:
             for i in range(0, len(row)):
                 if (i == (len(row) - 1)):
                     f.write(row[i].encode('utf-8'))
@@ -83,3 +83,4 @@ class DB:
             f.write('\n')
         f.close()
         print 'File created.'
+        

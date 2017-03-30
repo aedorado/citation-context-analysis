@@ -41,6 +41,7 @@ class URL:
 	def get_citations(self):
 		self.citations_url = self.url.replace('summary', 'citations')
 		OK = False
+		tries = 0
 		while not OK:
 			try:
 				self.response = urllib2.urlopen(self.citations_url)
